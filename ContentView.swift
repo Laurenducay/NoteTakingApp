@@ -16,13 +16,29 @@ struct ContentView: View {
         NavigationStack {
             VStack(spacing: 0) {
                 NoteCellView(notes: _notes)
-                NoteSheetView()
             }
             .navigationTitle(Text("Notes"))
+        }
+        Button(action: { addNote() }) {
+            Image(systemName: "plus")
+                .padding()
+                .foregroundColor(.white)
+                .background(Color.pink.opacity(0.2))
+                .clipShape(Circle())
+                .shadow(color: Color.pink, radius: 5)
+            
+        }
+        .padding(EdgeInsets(top: 10, leading: 300, bottom: 0, trailing: 0))
+        .sheet(isPresented: $isShowingNoteSheet, onDismiss: didDismiss) {
+            NoteSheetView()
+                .presentationDetents([.fraction(0.7), .large, .medium])
         }
     }
     func addNote() {
         isShowingNoteSheet.toggle()
+    }
+    func didDismiss() {
+        
     }
 }
 
@@ -37,28 +53,46 @@ struct NoteCellView: View {
         }
         .scrollContentBackground(.hidden)
         .background(Color.pink.opacity(0.2))
-
+        
     }
 }
 
 struct NoteSheetView: View { //refactor into sheet, "save" button to add sheet, "plus" button to bring sheet up
     @Environment(\.managedObjectContext) var managedObjectContext
+    @State var title: String = ""
+    @State var content: String = ""
     var body: some View {
-        Button(action: {
-            let note = Note(context: managedObjectContext)
-            note.id = UUID()
-            note.title = "New Note"
-            try? managedObjectContext.save()
-        }) {
-            Image(systemName: "plus")
-                .padding()
-                .foregroundColor(.white)
-                .background(Color.pink.opacity(0.2))
-                .clipShape(Circle())
-                .shadow(color: Color.pink, radius: 5)
-            
+        NavigationStack {
+            VStack(alignment: .leading, spacing: 0) {
+                TextField("Title", text: $title)
+                    .font(.headline)
+                    .padding([.leading, .top], 30)
+                Divider()
+                    .padding()
+                TextField("Content", text: $content)
+                    .padding(.leading, 30)
+                Spacer()
+            }
+            .toolbar {
+                ToolbarItemGroup(placement: .topBarLeading) {
+                    Button("Save") {
+                        let note = Note(context: managedObjectContext)
+                        note.id = UUID()
+                        note.title = title
+                        note.content = content
+                        note.date = Date()
+                        try? managedObjectContext.save()
+                    }
+                    .padding(10)
+                    .foregroundColor(.white)
+                    .background(Color.pink.opacity(0.6))
+                    .clipShape(RoundedRectangle(cornerRadius: 10))
+                    .padding(EdgeInsets(top: 20, leading: 0, bottom: 0, trailing: 300))
+                    .shadow(color: Color.pink, radius: 5)
+                    
+                }
+            }
         }
-        .padding(EdgeInsets(top: 0, leading: 300, bottom: 0, trailing: 0))
     }
 }
 
