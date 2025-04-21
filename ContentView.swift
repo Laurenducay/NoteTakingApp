@@ -8,47 +8,37 @@
 import SwiftUI
 
 struct ContentView: View {
-    @FetchRequest(sortDescriptors: []) var notes: FetchedResults<Note>
-    @State private var isShowingNoteSheet = false //move to vm later on, okay for now
+    @FetchRequest(sortDescriptors: [ //move to vm
+        SortDescriptor(\.date, order: .reverse)
+    ]) var notes: FetchedResults<Note>
+    @State private var isNavigating = false //move to vm
     @Environment(\.dismiss) var dismiss
+    
+    init() {
+        UINavigationBar.appearance().largeTitleTextAttributes = [.foregroundColor: UIColor.systemPink]
+    }
     
     var body: some View {
         NavigationStack {
-            VStack(spacing: 0) {
-                NoteCellView(notes: _notes)
-                NoteSheetView()
+            ZStack {
+                VStack(spacing: 0) {
+                    NoteCellView(notes: _notes)
+                }
+                VStack {
+                    Spacer()
+                    addNoteButton
+                }
+                .navigationTitle(Text("Notes"))
+                .navigationDestination(isPresented: $isNavigating) {
+                    NoteView()
+                }
             }
-            .navigationTitle(Text("Notes"))
         }
     }
-    func addNote() {
-        isShowingNoteSheet.toggle()
-    }
-}
-
-struct NoteCellView: View {
-    @FetchRequest(sortDescriptors: []) var notes: FetchedResults<Note>
-    var body: some View {
-        List(notes) { note in
-            Text(note.title ?? "No title")
-                .foregroundColor(.white)
-                .listRowBackground(Color.pink.opacity(0.5))
-                .listRowSeparatorTint(Color.pink)
-        }
-        .scrollContentBackground(.hidden)
-        .background(Color.pink.opacity(0.2))
-
-    }
-}
-
-struct NoteSheetView: View { //refactor into sheet, "save" button to add sheet, "plus" button to bring sheet up
-    @Environment(\.managedObjectContext) var managedObjectContext
-    var body: some View {
+    
+    var addNoteButton: some View {
         Button(action: {
-            let note = Note(context: managedObjectContext)
-            note.id = UUID()
-            note.title = "New Note"
-            try? managedObjectContext.save()
+            isNavigating = true
         }) {
             Image(systemName: "plus")
                 .padding()
@@ -58,7 +48,7 @@ struct NoteSheetView: View { //refactor into sheet, "save" button to add sheet, 
                 .shadow(color: Color.pink, radius: 5)
             
         }
-        .padding(EdgeInsets(top: 0, leading: 300, bottom: 0, trailing: 0))
+        .padding(EdgeInsets(top: 10, leading: 300, bottom: 0, trailing: 0))
     }
 }
 
