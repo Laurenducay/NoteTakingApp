@@ -8,41 +8,47 @@
 import SwiftUI
 
 struct ContentView: View {
-    @FetchRequest(sortDescriptors: []) var notes: FetchedResults<Note>
-    @State private var isShowingNoteSheet = false //move to vm later on, okay for now
-    @State private var isNavigating = false
+    @FetchRequest(sortDescriptors: [ //move to vm
+        SortDescriptor(\.date, order: .reverse)
+    ]) var notes: FetchedResults<Note>
+    @State private var isNavigating = false //move to vm
     @Environment(\.dismiss) var dismiss
+    
+    init() {
+        UINavigationBar.appearance().largeTitleTextAttributes = [.foregroundColor: UIColor.systemPink]
+    }
     
     var body: some View {
         NavigationStack {
-            VStack(spacing: 0) {
-                NoteCellView(notes: _notes)
-                
-                Button(action: {
-                    isNavigating = true
-                }) {
-                    Image(systemName: "plus")
-                        .padding()
-                        .foregroundColor(.white)
-                        .background(Color.pink.opacity(0.2))
-                        .clipShape(Circle())
-                        .shadow(color: Color.pink, radius: 5)
-                    
+            ZStack {
+                VStack(spacing: 0) {
+                    NoteCellView(notes: _notes)
                 }
-                .padding(EdgeInsets(top: 10, leading: 300, bottom: 0, trailing: 0))
-            }
-            .navigationTitle(Text("Notes"))
-            .navigationDestination(isPresented: $isNavigating) {
-                NoteView()
+                VStack {
+                    Spacer()
+                    addNoteButton
+                }
+                .navigationTitle(Text("Notes"))
+                .navigationDestination(isPresented: $isNavigating) {
+                    NoteView()
+                }
             }
         }
     }
     
-    func addNote() {
-        isShowingNoteSheet.toggle()
-    }
-    func didDismiss() {
-        
+    var addNoteButton: some View {
+        Button(action: {
+            isNavigating = true
+        }) {
+            Image(systemName: "plus")
+                .padding()
+                .foregroundColor(.white)
+                .background(Color.pink.opacity(0.2))
+                .clipShape(Circle())
+                .shadow(color: Color.pink, radius: 5)
+            
+        }
+        .padding(EdgeInsets(top: 10, leading: 300, bottom: 0, trailing: 0))
     }
 }
 
