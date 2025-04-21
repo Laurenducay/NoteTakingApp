@@ -16,7 +16,7 @@ struct NoteView: View { //refactor into sheet, "save" button to add sheet, "plus
     var note: Note?
     
     var body: some View {
-        NavigationView {
+        NavigationStack {
             VStack(alignment: .leading, spacing: 0) {
                 TextField("Title", text: $title)
                     .font(.headline)
@@ -29,6 +29,9 @@ struct NoteView: View { //refactor into sheet, "save" button to add sheet, "plus
                     .multilineTextAlignment(.leading)
                 Spacer()
             }
+            .navigationBarBackButtonHidden(true)
+            .foregroundColor(.pink)
+            .background(.pink.opacity(0.05))
             .onAppear {
                 if let note = note {
                     title = note.title ?? ""
@@ -58,10 +61,28 @@ struct NoteView: View { //refactor into sheet, "save" button to add sheet, "plus
                     .background(Color.pink.opacity(0.6))
                     .clipShape(RoundedRectangle(cornerRadius: 50))
                     .shadow(color: Color.pink, radius: 5)
-                    .padding(EdgeInsets(top: 0, leading: 10, bottom: 0, trailing: 10))
+//                    .padding(EdgeInsets(top: 0, leading: 10, bottom: 0, trailing: 10))
                     
                 }
+                ToolbarItem(placement: .topBarLeading) {
+                    Button(action: {
+                        dismiss()
+                    }) {
+                        Image(systemName: "chevron.left.circle")
+                            .foregroundColor(.pink)
+                    }
+                }
+                
             }
+        }
+    }
+}
+
+struct BackButton: View {
+    var body: some View {
+        NavigationStack {
+        NavigationLink("Go Back",
+                       destination: ContentView())
         }
     }
 }
