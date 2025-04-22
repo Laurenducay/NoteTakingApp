@@ -44,20 +44,16 @@ struct NoteCellView: View {
                 .onDelete(perform: deleteNote)
             }
             .scrollContentBackground(.hidden)
-            .background(LinearGradient(gradient:
-                                    Gradient(colors:
-                                                    [
-                                                        Color.pink.opacity(0.1), Color.pink.opacity(0.7), Color.pink.opacity(0.4)
-                                                    ]),
-                                       startPoint: .topLeading,
-                                       endPoint: .bottomTrailing
-                                      ))
-            .toolbar {
-                ToolbarItem(placement: .navigationBarLeading) {
-                    EditButton()
-                        .foregroundColor(.pink)
-                }
-            }
+            .background(
+                LinearGradient(
+                    gradient: Gradient(
+                        colors:
+                            [
+                                Color.pink.opacity(0.1), Color.pink.opacity(0.7), Color.pink.opacity(0.4)
+                            ]),
+                    startPoint: .topLeading,
+                    endPoint: .bottomTrailing
+                ))
         }
     }
     func deleteNote(at offsets: IndexSet) {

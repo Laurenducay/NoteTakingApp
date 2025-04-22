@@ -11,8 +11,9 @@ struct ContentView: View {
     @FetchRequest(sortDescriptors: [ //move to vm
         SortDescriptor(\.date, order: .reverse)
     ]) var notes: FetchedResults<Note>
-    @State private var isNavigating = false //move to vm
+    @State private var addingNote = false //move to vm
     @Environment(\.dismiss) var dismiss
+    @State private var changingTheme = false
     
     init() {
         UINavigationBar.appearance().largeTitleTextAttributes = [.foregroundColor: UIColor.systemPink]
@@ -29,7 +30,7 @@ struct ContentView: View {
                     addNoteButton
                 }
                 .navigationTitle(Text("Notes"))
-                .navigationDestination(isPresented: $isNavigating) {
+                .navigationDestination(isPresented: $addingNote) {
                     NoteView()
                 }
             }
@@ -47,23 +48,21 @@ struct ContentView: View {
     
     var moreButton: some View {
         Button(action: {
-            isNavigating = true
+            changingTheme = true
         }) {
             Image(systemName: "ellipsis.circle")
                 .padding()
                 .foregroundColor(.pink)
             
         }
-        .background(NavigationLink(destination: ThemeSelectorView(), isActive: $isNavigating) {
-            EmptyView()
+        .navigationDestination(isPresented: $changingTheme) {
+            ThemeSelectorView()
         }
-            .hidden()
-        )
     }
     
     var addNoteButton: some View {
         Button(action: {
-            isNavigating = true
+            addingNote = true
         }) {
             Image(systemName: "plus")
                 .padding()
