@@ -61,7 +61,6 @@ struct NoteView: View { //refactor into sheet, "save" button to add sheet, "plus
                     .background(Color.pink.opacity(0.6))
                     .clipShape(RoundedRectangle(cornerRadius: 50))
                     .shadow(color: Color.pink, radius: 5)
-//                    .padding(EdgeInsets(top: 0, leading: 10, bottom: 0, trailing: 10))
                     
                 }
                 ToolbarItem(placement: .topBarLeading) {
