@@ -19,7 +19,7 @@ struct NoteCellView: View {
         formatter.timeStyle = .none
         return formatter
     }()
-    
+    @State var navigate = false
     var body: some View {
         NavigationStack {
             

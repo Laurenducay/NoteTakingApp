@@ -33,7 +33,32 @@ struct ContentView: View {
                     NoteView()
                 }
             }
+            .toolbar {
+                ToolbarItem(placement: .navigationBarLeading) {
+                    EditButton()
+                        .foregroundColor(.pink)
+                }
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    moreButton
+                }
+            }
         }
+    }
+    
+    var moreButton: some View {
+        Button(action: {
+            isNavigating = true
+        }) {
+            Image(systemName: "ellipsis.circle")
+                .padding()
+                .foregroundColor(.pink)
+            
+        }
+        .background(NavigationLink(destination: ThemeSelectorView(), isActive: $isNavigating) {
+            EmptyView()
+        }
+            .hidden()
+        )
     }
     
     var addNoteButton: some View {
