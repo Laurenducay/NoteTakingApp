@@ -8,10 +8,10 @@
 import SwiftUI
 
 struct ContentView: View {
-    @FetchRequest(sortDescriptors: [ //move to vm
+    @FetchRequest(sortDescriptors: [
         SortDescriptor(\.date, order: .reverse)
     ]) var notes: FetchedResults<Note>
-    @State private var isNavigating = false //move to vm
+    @State private var isNavigating = false
     @Environment(\.dismiss) var dismiss
     
     init() {
@@ -49,6 +49,10 @@ struct ContentView: View {
             
         }
         .padding(EdgeInsets(top: 10, leading: 300, bottom: 0, trailing: 0))
+    }
+    
+    func didDismiss() {
+        
     }
 }
 

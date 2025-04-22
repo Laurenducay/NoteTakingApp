@@ -45,10 +45,10 @@ struct NoteCellView: View {
             }
             .scrollContentBackground(.hidden)
             .background(LinearGradient(gradient:
-                                    Gradient(colors:
-                                                    [
-                                                        Color.pink.opacity(0.1), Color.pink.opacity(0.7), Color.pink.opacity(0.4)
-                                                    ]),
+                                        Gradient(colors:
+                                                [
+                                            Color.pink.opacity(0.1), Color.pink.opacity(0.7), Color.pink.opacity(0.4)
+                                        ]),
                                        startPoint: .topLeading,
                                        endPoint: .bottomTrailing
                                       ))
@@ -57,16 +57,19 @@ struct NoteCellView: View {
                     EditButton()
                         .foregroundColor(.pink)
                 }
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    
+                }
             }
         }
     }
-    func deleteNote(at offsets: IndexSet) {
-        for offset in offsets {
-            let note = notes[offset]
-            managedObjectContext.delete(note)
+        func deleteNote(at offsets: IndexSet) {
+            for offset in offsets {
+                let note = notes[offset]
+                managedObjectContext.delete(note)
+            }
+            try? managedObjectContext.save()
         }
-        try? managedObjectContext.save()
-    }
 }
 
 #Preview {
